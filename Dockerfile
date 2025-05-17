@@ -1,5 +1,13 @@
 FROM node:18-alpine
 
+# Build arguments
+ARG NODE_ENV=production
+ARG APP_VERSION=1.0.1
+
+# Add metadata
+LABEL version=$APP_VERSION
+LABEL description="Taekwondo Pengcab Bogor Application"
+
 # Install PostgreSQL client for pg_isready
 RUN apk add --no-cache postgresql-client
 
@@ -20,6 +28,10 @@ COPY . .
 
 # Create uploads directories for file uploads
 RUN mkdir -p uploads/members uploads/units
+
+# Set environment variables
+ENV NODE_ENV=$NODE_ENV
+ENV APP_VERSION=$APP_VERSION
 
 # Expose port
 EXPOSE 3000
