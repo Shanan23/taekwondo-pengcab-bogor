@@ -16,12 +16,12 @@ services:
       - PORT=3000
       - DB_HOST=host.docker.internal
       - DB_PORT=5432
-      - DB_NAME=taekwondo_db
-      - DB_USER=postgres
-      - DB_PASS=postgres_password
+      - DB_NAME=taekwondo_bogor
+      - DB_USER=casaos
+      - DB_PASS=casaos
       - DB_SSL=false
-      - SESSION_SECRET=your_session_secret
-      - JWT_SECRET=your_jwt_secret
+      - SESSION_SECRET=xaM78fkcKGx/MdPkAc97FPXSBLOycwA2qyN8brHXZOc=
+      - JWT_SECRET=vtODH1N7kW2KJOPWSjyuVLyWpKcBrq9f0/XXtOmF0tc=
     volumes:
       - ./uploads:/app/uploads
     restart: unless-stopped
