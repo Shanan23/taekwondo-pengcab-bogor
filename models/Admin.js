@@ -68,4 +68,12 @@ Admin.prototype.validPassword = async function(password) {
   return await bcrypt.compare(password, this.password);
 };
 
+// Define associations
+Admin.associate = function(models) {
+  Admin.hasMany(models.Contact, {
+    foreignKey: 'responseBy',
+    as: 'responses'
+  });
+};
+
 module.exports = Admin; 

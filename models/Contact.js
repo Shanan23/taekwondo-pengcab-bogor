@@ -4,7 +4,10 @@ const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Contact extends Model {
     static associate(models) {
-      // No associations needed for Contact model
+      Contact.belongsTo(models.Admin, {
+        foreignKey: 'responseBy',
+        as: 'respondedBy'
+      });
     }
   }
   
@@ -49,6 +52,14 @@ module.exports = (sequelize, DataTypes) => {
     adminNotes: {
       type: DataTypes.TEXT,
       allowNull: true
+    },
+    responseBy: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'admins',
+        key: 'id'
+      }
     }
   }, {
     sequelize,

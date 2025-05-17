@@ -87,4 +87,12 @@ const Unit = sequelize.define('Unit', {
   ]
 });
 
+// Define associations
+Unit.associate = function(models) {
+  Unit.hasMany(models.Member, {
+    foreignKey: 'unitId',
+    as: 'members'
+  });
+};
+
 module.exports = Unit; 

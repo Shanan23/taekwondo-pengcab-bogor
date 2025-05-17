@@ -1,6 +1,5 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const Unit = require('./Unit');
 
 const Member = sequelize.define('Member', {
   id: {
@@ -116,8 +115,12 @@ const Member = sequelize.define('Member', {
   ]
 });
 
-// Define association with Unit
-Member.belongsTo(Unit, { foreignKey: 'unitId' });
-Unit.hasMany(Member, { foreignKey: 'unitId' });
+// Define associations
+Member.associate = function(models) {
+  Member.belongsTo(models.Unit, {
+    foreignKey: 'unitId',
+    as: 'unit'
+  });
+};
 
 module.exports = Member; 
