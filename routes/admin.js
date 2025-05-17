@@ -42,16 +42,20 @@ router.post('/vision-mission/vision', isAuthenticated, upload.single('image'), v
 router.post('/vision-mission/mission', isAuthenticated, upload.single('image'), visionMissionController.updateMission);
 
 // Organization Structure Management
-router.get('/organization', isAuthenticated, organizationController.getOrganization);
-router.post('/organization', isAuthenticated, upload.single('image'), organizationController.updateOrganization);
+router.get('/organization', isAuthenticated, organizationController.index);
+router.get('/organization/create', isAuthenticated, organizationController.create);
+router.post('/organization/create', isAuthenticated, upload.single('photo'), organizationController.store);
+router.get('/organization/edit/:id', isAuthenticated, organizationController.edit);
+router.post('/organization/edit/:id', isAuthenticated, upload.single('photo'), organizationController.update);
+router.delete('/organization/:id', isAuthenticated, organizationController.destroy);
 
 // Events Management
-router.get('/events', isAuthenticated, eventController.getAllEvents);
-router.get('/events/create', isAuthenticated, eventController.renderCreateForm);
-router.post('/events/create', isAuthenticated, upload.single('image'), eventController.createEvent);
-router.get('/events/edit/:id', isAuthenticated, eventController.renderEditForm);
-router.post('/events/edit/:id', isAuthenticated, upload.single('image'), eventController.updateEvent);
-router.delete('/events/:id', isAuthenticated, eventController.deleteEvent);
+router.get('/events', isAuthenticated, eventController.index);
+router.get('/events/create', isAuthenticated, eventController.create);
+router.post('/events/create', isAuthenticated, upload.single('image'), eventController.store);
+router.get('/events/edit/:id', isAuthenticated, eventController.edit);
+router.post('/events/edit/:id', isAuthenticated, upload.single('image'), eventController.update);
+router.delete('/events/:id', isAuthenticated, eventController.destroy);
 
 // Units Management
 router.get('/units', isAuthenticated, unitController.getAllUnits);

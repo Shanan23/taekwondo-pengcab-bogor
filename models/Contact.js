@@ -1,68 +1,53 @@
 'use strict';
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const User = require('./User');
 
 const Contact = sequelize.define('Contact', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
   name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      notEmpty: true
-    }
+    type: DataTypes.STRING(255),
+    allowNull: false
   },
   email: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(255),
     allowNull: false,
     validate: {
-      isEmail: true,
-      notEmpty: true
+      isEmail: true
     }
   },
   phone: {
-    type: DataTypes.STRING,
-    allowNull: true
+    type: DataTypes.STRING(255)
   },
   subject: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      notEmpty: true
-    }
+    type: DataTypes.STRING(255),
+    allowNull: false
   },
   message: {
     type: DataTypes.TEXT,
-    allowNull: false,
-    validate: {
-      notEmpty: true
-    }
+    allowNull: false
   },
   status: {
-    type: DataTypes.ENUM('unread', 'read', 'replied', 'archived'),
+    type: DataTypes.ENUM('unread', 'read', 'replied'),
     defaultValue: 'unread'
   },
   adminNotes: {
-    type: DataTypes.TEXT,
-    allowNull: true
-  },
-  responseBy: {
-    type: DataTypes.INTEGER,
-    allowNull: true,
-    references: {
-      model: 'admins',
-      key: 'id'
-    }
+    type: DataTypes.TEXT
   }
 }, {
+  timestamps: true,
   tableName: 'contacts',
-  timestamps: true
+  schema: 'public'
 });
 
-// Define associations
-Contact.associate = function(models) {
-  Contact.belongsTo(models.Admin, {
-    foreignKey: 'responseBy',
-    as: 'respondedBy'
-  });
-};
+// Define the association
+Contact.belongsTo(User, {
+  foreignKey: 'responseBy',
+  as: 'responder'
+});
 
 module.exports = Contact; 

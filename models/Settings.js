@@ -8,37 +8,34 @@ const Settings = sequelize.define('Settings', {
         autoIncrement: true
     },
     siteName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        defaultValue: 'Taekwondo Pengcab Bogor'
+        type: DataTypes.STRING(100),
+        allowNull: false
     },
     siteDescription: {
-        type: DataTypes.TEXT,
-        allowNull: true
+        type: DataTypes.TEXT
     },
     contactEmail: {
-        type: DataTypes.STRING,
-        allowNull: true,
+        type: DataTypes.STRING(100),
         validate: {
             isEmail: true
         }
     },
     contactPhone: {
-        type: DataTypes.STRING,
-        allowNull: true
+        type: DataTypes.STRING(20)
     },
     socialMedia: {
-        type: DataTypes.JSON,
-        allowNull: true,
+        type: DataTypes.JSONB,
         defaultValue: {
-            facebook: null,
-            instagram: null,
-            twitter: null,
-            youtube: null
+            facebook: '',
+            instagram: '',
+            twitter: '',
+            youtube: ''
         }
     }
 }, {
-    timestamps: true
+    timestamps: true,
+    tableName: 'settings',
+    schema: 'public'
 });
 
 module.exports = Settings; 
