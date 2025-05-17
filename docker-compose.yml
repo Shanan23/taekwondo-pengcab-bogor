@@ -21,19 +21,5 @@ services:
       - ./uploads:/app/uploads
       - ./src/db/migrations:/app/src/db/migrations
       - ./src/db/seeders:/app/src/db/seeders
-
-  db:
-    image: postgres:14-alpine
-    container_name: taekwondo-db
-    restart: unless-stopped
-    environment:
-      - POSTGRES_DB=taekwondo_bogor
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-
 volumes:
   postgres_data: 
