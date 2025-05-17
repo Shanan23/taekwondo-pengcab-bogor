@@ -52,9 +52,15 @@ router.post('/organization/order', isAuthenticated, organizationController.updat
 // Events Management
 router.get('/events', isAuthenticated, eventController.index);
 router.get('/events/create', isAuthenticated, eventController.create);
-router.post('/events/create', isAuthenticated, upload.single('image'), eventController.store);
-router.get('/events/edit/:id', isAuthenticated, eventController.edit);
-router.post('/events/edit/:id', isAuthenticated, upload.single('image'), eventController.update);
+router.post('/events/create', isAuthenticated, upload.fields([
+    { name: 'featuredImage', maxCount: 1 },
+    { name: 'gallery', maxCount: 10 }
+]), eventController.store);
+router.get('/events/:id/edit', isAuthenticated, eventController.edit);
+router.put('/events/:id', isAuthenticated, upload.fields([
+    { name: 'featuredImage', maxCount: 1 },
+    { name: 'gallery', maxCount: 10 }
+]), eventController.update);
 router.delete('/events/:id', isAuthenticated, eventController.destroy);
 
 // Units Management

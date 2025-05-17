@@ -1,11 +1,11 @@
 {
   "name": "taekwondo-pengcab-bogor",
   "version": "1.0.0",
-  "main": "app.js",
+  "main": "src/app.js",
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "db:init": "node db/init-db.js",
+    "db:init": "node src/db/init-db.js",
     "db:migrate": "npx sequelize-cli db:migrate",
     "db:seed": "npx sequelize-cli db:seed:all",
     "db:reset": "npx sequelize-cli db:migrate:undo:all && npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all",
@@ -15,7 +15,12 @@
     "docker:logs": "docker-compose logs -f",
     "docker:restart": "docker-compose restart",
     "docker:rebuild": "docker-compose down && docker-compose build && docker-compose up -d",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
+    "format": "prettier --write 'src/**/*.{js,json}'"
   },
   "keywords": [],
   "author": "",

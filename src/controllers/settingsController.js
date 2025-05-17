@@ -10,6 +10,7 @@ exports.getSettings = async (req, res) => {
         res.render('admin/settings', {
             title: 'Settings',
             active: 'settings',
+            path: '/admin/settings',
             settings: settings
         });
     } catch (error) {

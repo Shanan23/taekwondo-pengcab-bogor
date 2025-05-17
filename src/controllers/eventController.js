@@ -39,7 +39,7 @@ exports.create = (req, res) => {
 exports.store = async (req, res) => {
   try {
     const {
-      title, slug, description, shortDescription, location,
+      title, description, shortDescription, location,
       startDate, endDate, registrationDeadline, status,
       isHighlighted, organizer, contact, eventType, participants,
       registrationLink
@@ -58,15 +58,15 @@ exports.store = async (req, res) => {
       gallery = req.files.gallery.map(file => `/uploads/events/gallery/${file.filename}`);
     }
     
-    // Create slug if not provided
-    const eventSlug = slug || title.toLowerCase()
+    // Create slug from title
+    const slug = title.toLowerCase()
       .replace(/\s+/g, '-')
       .replace(/[^\w-]+/g, '');
     
     // Create event
     const newEvent = await Event.create({
       title,
-      slug: eventSlug,
+      slug,
       description,
       shortDescription,
       location,
@@ -139,7 +139,7 @@ exports.update = async (req, res) => {
     }
     
     const {
-      title, slug, description, shortDescription, location,
+      title, description, shortDescription, location,
       startDate, endDate, registrationDeadline, status,
       isHighlighted, organizer, contact, eventType, participants,
       registrationLink, removeGallery, removeImage
@@ -186,15 +186,15 @@ exports.update = async (req, res) => {
       gallery = gallery.concat(newGalleryImages);
     }
     
-    // Create slug if not provided
-    const eventSlug = slug || title.toLowerCase()
+    // Create slug from title
+    const slug = title.toLowerCase()
       .replace(/\s+/g, '-')
       .replace(/[^\w-]+/g, '');
     
     // Update event
     await event.update({
       title,
-      slug: eventSlug,
+      slug,
       description,
       shortDescription,
       location,

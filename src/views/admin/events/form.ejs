@@ -1,0 +1,166 @@
+<%- include('../../partials/header') %>
+
+<div class="container-fluid">
+    <div class="row">
+        <%- include('../../partials/sidebar') %>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2"><%= isEdit ? 'Edit Event' : 'Create New Event' %></h1>
+            </div>
+
+            <% if (messages.error && messages.error.length) { %>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <%= messages.error %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <% } else if (messages.success && messages.success.length) { %>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <%= messages.success %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <% } %>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <form action="<%= isEdit ? `/admin/events/${event.id}` : '/admin/events/create' %>" method="POST" enctype="multipart/form-data">
+                                <% if (isEdit) { %>
+                                    <input type="hidden" name="_method" value="PUT">
+                                <% } %>
+                                
+                                <div class="mb-3">
+                                    <label for="title" class="form-label">Event Title</label>
+                                    <input type="text" class="form-control" id="title" name="title" value="<%= event?.title || '' %>" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Description</label>
+                                    <textarea class="form-control" id="description" name="description" rows="4" required><%= event?.description || '' %></textarea>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="shortDescription" class="form-label">Short Description</label>
+                                    <textarea class="form-control" id="shortDescription" name="shortDescription" rows="2"><%= event?.shortDescription || '' %></textarea>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="startDate" class="form-label">Start Date</label>
+                                            <input type="datetime-local" class="form-control" id="startDate" name="startDate" value="<%= event?.startDate ? event.startDate.toISOString().slice(0, 16) : '' %>" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="endDate" class="form-label">End Date</label>
+                                            <input type="datetime-local" class="form-control" id="endDate" name="endDate" value="<%= event?.endDate ? event.endDate.toISOString().slice(0, 16) : '' %>" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="location" class="form-label">Location</label>
+                                    <input type="text" class="form-control" id="location" name="location" value="<%= event?.location || '' %>" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="status" class="form-label">Status</label>
+                                    <select class="form-select" id="status" name="status" required>
+                                        <option value="upcoming" <%= event?.status === 'upcoming' ? 'selected' : '' %>>Upcoming</option>
+                                        <option value="ongoing" <%= event?.status === 'ongoing' ? 'selected' : '' %>>Ongoing</option>
+                                        <option value="completed" <%= event?.status === 'completed' ? 'selected' : '' %>>Completed</option>
+                                        <option value="cancelled" <%= event?.status === 'cancelled' ? 'selected' : '' %>>Cancelled</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="maxParticipants" class="form-label">Maximum Participants</label>
+                                    <input type="number" class="form-control" id="maxParticipants" name="participants" value="<%= event?.participants || '' %>" min="0">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="registrationDeadline" class="form-label">Registration Deadline</label>
+                                    <input type="datetime-local" class="form-control" id="registrationDeadline" name="registrationDeadline" value="<%= event?.registrationDeadline ? event.registrationDeadline.toISOString().slice(0, 16) : '' %>">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="organizer" class="form-label">Organizer</label>
+                                    <input type="text" class="form-control" id="organizer" name="organizer" value="<%= event?.organizer || '' %>">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="contact" class="form-label">Contact Information</label>
+                                    <input type="text" class="form-control" id="contact" name="contact" value="<%= event?.contact || '' %>">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="eventType" class="form-label">Event Type</label>
+                                    <input type="text" class="form-control" id="eventType" name="eventType" value="<%= event?.eventType || '' %>">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="registrationLink" class="form-label">Registration Link</label>
+                                    <input type="url" class="form-control" id="registrationLink" name="registrationLink" value="<%= event?.registrationLink || '' %>">
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="isHighlighted" name="isHighlighted" value="true" <%= event?.isHighlighted ? 'checked' : '' %>>
+                                        <label class="form-check-label" for="isHighlighted">
+                                            Highlight this event
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="featuredImage" class="form-label">Featured Image</label>
+                                    <% if (event?.featuredImage) { %>
+                                        <div class="mb-2">
+                                            <img src="<%= event.featuredImage %>" alt="Current event image" class="img-thumbnail" style="max-height: 200px;">
+                                            <div class="form-check mt-2">
+                                                <input class="form-check-input" type="checkbox" id="removeImage" name="removeImage" value="true">
+                                                <label class="form-check-label" for="removeImage">
+                                                    Remove current image
+                                                </label>
+                                            </div>
+                                        </div>
+                                    <% } %>
+                                    <input type="file" class="form-control" id="featuredImage" name="featuredImage" accept="image/*">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="gallery" class="form-label">Gallery Images</label>
+                                    <% if (event?.gallery && event.gallery.length > 0) { %>
+                                        <div class="row mb-2">
+                                            <% event.gallery.forEach(image => { %>
+                                                <div class="col-md-3 mb-2">
+                                                    <img src="<%= image %>" alt="Gallery image" class="img-thumbnail">
+                                                </div>
+                                            <% }); %>
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" id="removeGallery" name="removeGallery" value="true">
+                                            <label class="form-check-label" for="removeGallery">
+                                                Remove all gallery images
+                                            </label>
+                                        </div>
+                                    <% } %>
+                                    <input type="file" class="form-control" id="gallery" name="gallery" accept="image/*" multiple>
+                                </div>
+
+                                <div class="d-flex justify-content-between">
+                                    <a href="/admin/events" class="btn btn-secondary">Cancel</a>
+                                    <button type="submit" class="btn btn-primary"><%= isEdit ? 'Update Event' : 'Create Event' %></button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<%- include('../../partials/footer') %> 
