@@ -1,0 +1,112 @@
+<%- include('../../partials/admin-header') %>
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Organization Management</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
+        <li class="breadcrumb-item active">Organization</li>
+    </ol>
+
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <div>
+                <i class="fas fa-sitemap me-1"></i>
+                Organization Members
+            </div>
+            <a href="/admin/organization/create" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus"></i> Add New Member
+            </a>
+        </div>
+        <div class="card-body">
+            <% if (organizations && organizations.length > 0) { %>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover" id="organizationTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Position</th>
+                                <th>Department</th>
+                                <th>Contact</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% organizations.forEach(member => { %>
+                                <tr data-id="<%= member.id %>">
+                                    <td>
+                                        <% if (member.photo) { %>
+                                            <img src="<%= member.photo %>" alt="<%= member.name %>" class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;">
+                                        <% } %>
+                                        <%= member.name %>
+                                    </td>
+                                    <td><%= member.position %></td>
+                                    <td><%= member.department %></td>
+                                    <td>
+                                        <% if (member.email) { %>
+                                            <div><i class="fas fa-envelope"></i> <%= member.email %></div>
+                                        <% } %>
+                                        <% if (member.phone) { %>
+                                            <div><i class="fas fa-phone"></i> <%= member.phone %></div>
+                                        <% } %>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-<%= member.active ? 'success' : 'danger' %>">
+                                            <%= member.active ? 'Active' : 'Inactive' %>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="/admin/organization/<%= member.id %>/edit" class="btn btn-sm btn-warning">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button class="btn btn-sm btn-danger" onclick="deleteMember(<%= member.id %>)">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } else { %>
+                <div class="alert alert-info">
+                    No organization members found. Click "Add New Member" to create one.
+                </div>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    $('#organizationTable').DataTable({
+        order: [[0, 'asc']],
+        pageLength: 25
+    });
+});
+
+function deleteMember(id) {
+    if (confirm('Are you sure you want to delete this member?')) {
+        fetch(`/admin/organization/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            } else {
+                alert('Error deleting member: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error deleting member');
+        });
+    }
+}
+</script>
+
+<%- include('../../partials/admin-footer') %> 

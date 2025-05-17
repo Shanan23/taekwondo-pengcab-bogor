@@ -1,0 +1,138 @@
+<%- include('../../partials/admin-header') %>
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4"><%= isEdit ? 'Edit' : 'Add' %> Organization Member</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="/admin/organization">Organization</a></li>
+        <li class="breadcrumb-item active"><%= isEdit ? 'Edit' : 'Add' %> Member</li>
+    </ol>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-user me-1"></i>
+            <%= isEdit ? 'Edit' : 'Add' %> Member Form
+        </div>
+        <div class="card-body">
+            <% if (errors && errors.length > 0) { %>
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        <% errors.forEach(error => { %>
+                            <li><%= error %></li>
+                        <% }); %>
+                    </ul>
+                </div>
+            <% } %>
+
+            <form action="<%= isEdit ? `/admin/organization/${organization.id}` : '/admin/organization/create' %>" 
+                  method="POST" 
+                  enctype="multipart/form-data">
+                
+                <% if (isEdit) { %>
+                    <input type="hidden" name="_method" value="PUT">
+                <% } %>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="name" name="name" 
+                                   value="<%= organization ? organization.name : '' %>" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="position" class="form-label">Position <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="position" name="position" 
+                                   value="<%= organization ? organization.position : '' %>" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="department" class="form-label">Department <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="department" name="department" 
+                                   value="<%= organization ? organization.department : '' %>" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="bio" class="form-label">Bio</label>
+                            <textarea class="form-control" id="bio" name="bio" rows="3"><%= organization ? organization.bio : '' %></textarea>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" 
+                                   value="<%= organization ? organization.email : '' %>">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Phone</label>
+                            <input type="tel" class="form-control" id="phone" name="phone" 
+                                   value="<%= organization ? organization.phone : '' %>">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="photo" class="form-label">Photo</label>
+                            <input type="file" class="form-control" id="photo" name="photo" accept="image/*">
+                            <% if (organization && organization.photo) { %>
+                                <div class="mt-2">
+                                    <img src="<%= organization.photo %>" alt="Current photo" class="img-thumbnail" style="max-height: 200px;">
+                                </div>
+                            <% } %>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="order" class="form-label">Display Order</label>
+                            <input type="number" class="form-control" id="order" name="order" 
+                                   value="<%= organization ? organization.order : 0 %>">
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="active" name="active" value="true"
+                                       <%= organization && organization.active ? 'checked' : '' %>>
+                                <label class="form-check-label" for="active">Active</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Social Media</label>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="input-group mb-2">
+                                <span class="input-group-text"><i class="fab fa-facebook"></i></span>
+                                <input type="text" class="form-control" name="socialMedia[facebook]" 
+                                       placeholder="Facebook URL" value="<%= organization && organization.socialMedia ? organization.socialMedia.facebook : '' %>">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group mb-2">
+                                <span class="input-group-text"><i class="fab fa-instagram"></i></span>
+                                <input type="text" class="form-control" name="socialMedia[instagram]" 
+                                       placeholder="Instagram Handle" value="<%= organization && organization.socialMedia ? organization.socialMedia.instagram : '' %>">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group mb-2">
+                                <span class="input-group-text"><i class="fab fa-twitter"></i></span>
+                                <input type="text" class="form-control" name="socialMedia[twitter]" 
+                                       placeholder="Twitter Handle" value="<%= organization && organization.socialMedia ? organization.socialMedia.twitter : '' %>">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <a href="/admin/organization" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary">
+                        <%= isEdit ? 'Update' : 'Create' %> Member
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<%- include('../../partials/admin-footer') %> 

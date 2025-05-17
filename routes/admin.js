@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
-const upload = multer({ storage: multer.memoryStorage() });
+const upload = require('../config/multer');
 
 // Middleware for authentication
 const { isAuthenticated } = require('../middlewares/auth');
@@ -45,9 +44,10 @@ router.post('/vision-mission/mission', isAuthenticated, upload.single('image'), 
 router.get('/organization', isAuthenticated, organizationController.index);
 router.get('/organization/create', isAuthenticated, organizationController.create);
 router.post('/organization/create', isAuthenticated, upload.single('photo'), organizationController.store);
-router.get('/organization/edit/:id', isAuthenticated, organizationController.edit);
-router.post('/organization/edit/:id', isAuthenticated, upload.single('photo'), organizationController.update);
+router.get('/organization/:id/edit', isAuthenticated, organizationController.edit);
+router.put('/organization/:id', isAuthenticated, upload.single('photo'), organizationController.update);
 router.delete('/organization/:id', isAuthenticated, organizationController.destroy);
+router.post('/organization/order', isAuthenticated, organizationController.updateOrder);
 
 // Events Management
 router.get('/events', isAuthenticated, eventController.index);

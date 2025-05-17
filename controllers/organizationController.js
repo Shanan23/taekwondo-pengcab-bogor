@@ -13,7 +13,7 @@ exports.index = async (req, res) => {
     });
     
     res.render('admin/organization/index', {
-      title: 'Organization Structure',
+      title: 'Organization Management',
       active: 'organization',
       organizations
     });
@@ -33,14 +33,15 @@ exports.create = (req, res) => {
     title: 'Add New Member',
     active: 'organization',
     organization: null,
-    isEdit: false
+    isEdit: false,
+    errors: []
   });
 };
 
 // Store a new organization member
 exports.store = async (req, res) => {
   try {
-    const { name, position, department, bio, email, phone, socialMedia, order, active } = req.body;
+    const { name, position, department, bio, email, phone, order, active } = req.body;
     let photo = null;
     
     // Handle file upload
@@ -48,27 +49,15 @@ exports.store = async (req, res) => {
       photo = `/uploads/organization/${req.file.filename}`;
     }
     
-    // Parse social media if provided
-    let parsedSocialMedia = {};
-    if (socialMedia) {
-      try {
-        parsedSocialMedia = JSON.parse(socialMedia);
-      } catch (e) {
-        // Try to parse from form fields
-        if (req.body['socialMedia.facebook']) {
-          parsedSocialMedia.facebook = req.body['socialMedia.facebook'];
-        }
-        if (req.body['socialMedia.instagram']) {
-          parsedSocialMedia.instagram = req.body['socialMedia.instagram'];
-        }
-        if (req.body['socialMedia.twitter']) {
-          parsedSocialMedia.twitter = req.body['socialMedia.twitter'];
-        }
-      }
-    }
+    // Parse social media
+    const socialMedia = {
+      facebook: req.body['socialMedia[facebook]'] || null,
+      instagram: req.body['socialMedia[instagram]'] || null,
+      twitter: req.body['socialMedia[twitter]'] || null
+    };
     
     // Create organization member
-    const newOrganization = await Organization.create({
+    await Organization.create({
       name,
       position,
       department,
@@ -76,7 +65,7 @@ exports.store = async (req, res) => {
       email,
       phone,
       photo,
-      socialMedia: Object.keys(parsedSocialMedia).length > 0 ? parsedSocialMedia : null,
+      socialMedia,
       order: order || 0,
       active: active === 'true' || active === true
     });
@@ -116,7 +105,8 @@ exports.edit = async (req, res) => {
       title: 'Edit Member',
       active: 'organization',
       organization,
-      isEdit: true
+      isEdit: true,
+      errors: []
     });
   } catch (error) {
     console.error('Organization edit form error:', error);
@@ -135,7 +125,7 @@ exports.update = async (req, res) => {
       return res.redirect('/admin/organization');
     }
     
-    const { name, position, department, bio, email, phone, socialMedia, order, active } = req.body;
+    const { name, position, department, bio, email, phone, order, active } = req.body;
     
     // Handle file upload
     let photo = organization.photo;
@@ -151,23 +141,11 @@ exports.update = async (req, res) => {
     }
     
     // Parse social media
-    let parsedSocialMedia = {};
-    if (socialMedia) {
-      try {
-        parsedSocialMedia = JSON.parse(socialMedia);
-      } catch (e) {
-        // Try to parse from form fields
-        if (req.body['socialMedia.facebook']) {
-          parsedSocialMedia.facebook = req.body['socialMedia.facebook'];
-        }
-        if (req.body['socialMedia.instagram']) {
-          parsedSocialMedia.instagram = req.body['socialMedia.instagram'];
-        }
-        if (req.body['socialMedia.twitter']) {
-          parsedSocialMedia.twitter = req.body['socialMedia.twitter'];
-        }
-      }
-    }
+    const socialMedia = {
+      facebook: req.body['socialMedia[facebook]'] || null,
+      instagram: req.body['socialMedia[instagram]'] || null,
+      twitter: req.body['socialMedia[twitter]'] || null
+    };
     
     // Update organization member
     await organization.update({
@@ -178,7 +156,7 @@ exports.update = async (req, res) => {
       email,
       phone,
       photo,
-      socialMedia: Object.keys(parsedSocialMedia).length > 0 ? parsedSocialMedia : null,
+      socialMedia,
       order: order || 0,
       active: active === 'true' || active === true
     });
