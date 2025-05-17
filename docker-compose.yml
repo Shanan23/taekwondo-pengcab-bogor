@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3.8'
 
 services:
   app:
@@ -8,12 +8,10 @@ services:
     container_name: taekwondo-app
     ports:
       - "3000:3000"
-    depends_on:
-      - postgres
     environment:
       - NODE_ENV=production
       - PORT=3000
-      - DB_HOST=postgres
+      - DB_HOST=host.docker.internal
       - DB_PORT=5432
       - DB_NAME=taekwondo_db
       - DB_USER=postgres
@@ -23,19 +21,10 @@ services:
     volumes:
       - ./uploads:/app/uploads
     restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
-  postgres:
-    image: postgres:14-alpine
-    container_name: taekwondo-postgres
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres_password
-      - POSTGRES_DB=taekwondo_db
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    restart: unless-stopped
+# No postgres service since we're using an existing one
 
 volumes:
-  postgres_data: 
+  uploads: 

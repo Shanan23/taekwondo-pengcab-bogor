@@ -4,7 +4,7 @@ set -e
 # Wait for the database to be ready
 echo "Waiting for PostgreSQL to start..."
 for i in {1..30}; do
-  if pg_isready -h postgres -p 5432 -U postgres; then
+  if pg_isready -h host.docker.internal -p 5432 -U postgres; then
     echo "PostgreSQL is up - continuing..."
     break
   fi
