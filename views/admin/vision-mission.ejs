@@ -1,5 +1,17 @@
 <%- include('../partials/admin-header') %>
 
+<% if(messages && messages.error && messages.error.length) { %>
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <%= messages.error %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+<% } else if(messages && messages.success && messages.success.length) { %>
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    <%= messages.success %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+<% } %>
+
 <div class="container-fluid px-4">
     <h1 class="mt-4">Manage Vision & Mission</h1>
     <ol class="breadcrumb mb-4">
