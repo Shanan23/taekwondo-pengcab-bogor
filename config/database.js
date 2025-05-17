@@ -3,8 +3,8 @@ require('dotenv').config();
 
 const sequelize = new Sequelize(
   process.env.DB_NAME || 'taekwondo_bogor',
-  process.env.DB_USER || 'postgres',
-  process.env.DB_PASSWORD || 'postgres',
+  process.env.DB_USER || 'casaos',
+  process.env.DB_PASSWORD || 'casaos',
   {
     host: process.env.DB_HOST || 'localhost',
     dialect: 'postgres',
