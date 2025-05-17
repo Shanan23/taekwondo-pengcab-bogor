@@ -14,6 +14,7 @@
     "docker:down": "docker-compose down",
     "docker:logs": "docker-compose logs -f",
     "docker:restart": "docker-compose restart",
+    "docker:rebuild": "docker-compose down && docker-compose build && docker-compose up -d",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

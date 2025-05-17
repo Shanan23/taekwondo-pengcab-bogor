@@ -1,0 +1,82 @@
+<%- include('../partials/admin-header') %>
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Manage Organization Structure</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
+        <li class="breadcrumb-item active">Organization Structure</li>
+    </ol>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-sitemap me-1"></i>
+            Organization Structure
+        </div>
+        <div class="card-body">
+            <form action="/admin/organization" method="POST" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="content" class="form-label">Description</label>
+                    <textarea class="form-control" id="content" name="content" rows="4" required><%= organization ? organization.content : '' %></textarea>
+                    <div class="form-text">Provide a brief description of your organization's structure.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="structureImage" class="form-label">Organization Structure Image</label>
+                    <input type="file" class="form-control" id="structureImage" name="image" accept="image/*">
+                    <div class="form-text">Upload an image showing your organization's structure (recommended size: 1200x800 pixels)</div>
+                    <% if (organization && organization.image) { %>
+                        <div class="mt-2">
+                            <img src="<%= organization.image %>" alt="Current organization structure" class="img-thumbnail" style="max-height: 300px;">
+                        </div>
+                    <% } %>
+                </div>
+
+                <div class="mb-3">
+                    <label for="positions" class="form-label">Key Positions</label>
+                    <div id="positionsContainer">
+                        <% if (organization && organization.positions && organization.positions.length > 0) { %>
+                            <% organization.positions.forEach((position, index) => { %>
+                                <div class="position-entry mb-2">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="positions[]" value="<%= position %>" placeholder="Position title">
+                                        <button type="button" class="btn btn-outline-danger remove-position" onclick="removePosition(this)">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        <% } %>
+                    </div>
+                    <button type="button" class="btn btn-outline-primary btn-sm mt-2" onclick="addPosition()">
+                        <i class="fas fa-plus"></i> Add Position
+                    </button>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function addPosition() {
+    const container = document.getElementById('positionsContainer');
+    const positionEntry = document.createElement('div');
+    positionEntry.className = 'position-entry mb-2';
+    positionEntry.innerHTML = `
+        <div class="input-group">
+            <input type="text" class="form-control" name="positions[]" placeholder="Position title">
+            <button type="button" class="btn btn-outline-danger remove-position" onclick="removePosition(this)">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+    container.appendChild(positionEntry);
+}
+
+function removePosition(button) {
+    button.closest('.position-entry').remove();
+}
+</script>
+
+<%- include('../partials/admin-footer') %> 

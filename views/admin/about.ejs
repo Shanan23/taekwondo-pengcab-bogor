@@ -1,0 +1,36 @@
+<%- include('../partials/admin-header') %>
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Manage About Us</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
+        <li class="breadcrumb-item active">About Us</li>
+    </ol>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-info-circle me-1"></i>
+            About Us Content
+        </div>
+        <div class="card-body">
+            <form action="/admin/about" method="POST">
+                <div class="mb-3">
+                    <label for="content" class="form-label">Content</label>
+                    <textarea class="form-control" id="content" name="content" rows="10" required><%= about ? about.content : '' %></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="image" class="form-label">Featured Image</label>
+                    <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                    <% if (about && about.image) { %>
+                        <div class="mt-2">
+                            <img src="<%= about.image %>" alt="Current featured image" class="img-thumbnail" style="max-height: 200px;">
+                        </div>
+                    <% } %>
+                </div>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<%- include('../partials/admin-footer') %> 

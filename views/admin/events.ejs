@@ -1,0 +1,105 @@
+<%- include('../partials/admin-header') %>
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Manage Events</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item"><a href="/admin">Dashboard</a></li>
+        <li class="breadcrumb-item active">Events</li>
+    </ol>
+
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <div>
+                <i class="fas fa-calendar-alt me-1"></i>
+                Events List
+            </div>
+            <a href="/admin/events/create" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus"></i> Create New Event
+            </a>
+        </div>
+        <div class="card-body">
+            <% if (events && events.length > 0) { %>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Date</th>
+                                <th>Location</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% events.forEach(event => { %>
+                                <tr>
+                                    <td><%= event.title %></td>
+                                    <td><%= new Date(event.date).toLocaleDateString() %></td>
+                                    <td><%= event.location %></td>
+                                    <td>
+                                        <span class="badge bg-<%= event.status === 'upcoming' ? 'primary' : 
+                                                                    event.status === 'ongoing' ? 'success' : 
+                                                                    'secondary' %>">
+                                            <%= event.status.charAt(0).toUpperCase() + event.status.slice(1) %>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="/admin/events/edit/<%= event._id %>" class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-edit"></i> Edit
+                                            </a>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" 
+                                                    onclick="confirmDelete('<%= event._id %>', '<%= event.title %>')">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } else { %>
+                <div class="text-center py-4">
+                    <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">No events found. Create your first event!</p>
+                    <a href="/admin/events/create" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Create New Event
+                    </a>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete the event "<span id="eventTitle"></span>"?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteForm" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function confirmDelete(eventId, eventTitle) {
+    const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+    document.getElementById('eventTitle').textContent = eventTitle;
+    document.getElementById('deleteForm').action = `/admin/events/${eventId}`;
+    modal.show();
+}
+</script>
+
+<%- include('../partials/admin-footer') %> 

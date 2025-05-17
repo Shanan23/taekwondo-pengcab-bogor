@@ -32,7 +32,11 @@ const generateMemberId = async () => {
 exports.getAllMembers = async (req, res) => {
   try {
     const members = await Member.findAll({
-      include: [{ model: Unit, attributes: ['name'] }],
+      include: [{ 
+        model: Unit, 
+        attributes: ['name'],
+        as: 'unit'
+      }],
       order: [['name', 'ASC']]
     });
     
