@@ -55,14 +55,12 @@
       <img class="logo mb-4 mx-auto" src="/img/logo.png" alt="Taekwondo Pengcab Bogor">
       <h1 class="h3 mb-3 fw-normal">Admin Login</h1>
       
-      <% if(messages.error) { %>
+      <% if(messages.error && messages.error.length) { %>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
           <%= messages.error %>
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-      <% } %>
-      
-      <% if(messages.success) { %>
+      <% } else if(messages.success && messages.success.length) { %>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
           <%= messages.success %>
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
