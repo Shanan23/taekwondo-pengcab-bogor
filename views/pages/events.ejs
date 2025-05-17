@@ -1,0 +1,159 @@
+<%- include('../partials/header') %>
+
+<main>
+  <!-- Page Header -->
+  <section class="bg-primary text-white py-5">
+    <div class="container">
+      <h1 class="fw-bold">Event & Kegiatan</h1>
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/" class="text-white">Beranda</a></li>
+          <li class="breadcrumb-item active text-white" aria-current="page">Event & Kegiatan</li>
+        </ol>
+      </nav>
+    </div>
+  </section>
+
+  <!-- Events Content -->
+  <section class="py-5">
+    <div class="container">
+      <!-- Event Filter -->
+      <div class="row mb-5">
+        <div class="col-md-6">
+          <h2>Daftar Event & Kegiatan</h2>
+        </div>
+        <div class="col-md-6">
+          <div class="d-flex justify-content-md-end">
+            <div class="btn-group" role="group">
+              <button type="button" class="btn btn-outline-primary active">Semua</button>
+              <button type="button" class="btn btn-outline-primary">Kejuaraan</button>
+              <button type="button" class="btn btn-outline-primary">Pelatihan</button>
+              <button type="button" class="btn btn-outline-primary">UKT/USH</button>
+              <button type="button" class="btn btn-outline-primary">Sosial</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Events List -->
+      <div class="row">
+        <!-- Event 1 -->
+        <div class="col-md-6 mb-4">
+          <div class="card h-100">
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img src="https://via.placeholder.com/300x200" class="img-fluid rounded-start h-100" alt="Event Image" style="object-fit: cover;">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h5 class="card-title">Kejuaraan Taekwondo Bogor Open 2023</h5>
+                  <div class="mb-2">
+                    <span class="badge bg-primary">Kejuaraan</span>
+                    <span class="badge bg-warning text-dark">Upcoming</span>
+                  </div>
+                  <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod metus eu enim facilisis.</p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted"><i class="fas fa-calendar-alt me-1"></i> 10-12 Desember 2023</small>
+                    <a href="/events/1" class="btn btn-sm btn-primary">Selengkapnya</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Event 2 -->
+        <div class="col-md-6 mb-4">
+          <div class="card h-100">
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img src="https://via.placeholder.com/300x200" class="img-fluid rounded-start h-100" alt="Event Image" style="object-fit: cover;">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h5 class="card-title">Pelatihan Pelatih Nasional</h5>
+                  <div class="mb-2">
+                    <span class="badge bg-success">Pelatihan</span>
+                    <span class="badge bg-success">Completed</span>
+                  </div>
+                  <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod metus eu enim facilisis.</p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted"><i class="fas fa-calendar-alt me-1"></i> 15-17 November 2023</small>
+                    <a href="/events/2" class="btn btn-sm btn-primary">Selengkapnya</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Event 3 -->
+        <div class="col-md-6 mb-4">
+          <div class="card h-100">
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img src="https://via.placeholder.com/300x200" class="img-fluid rounded-start h-100" alt="Event Image" style="object-fit: cover;">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h5 class="card-title">Ujian Kenaikan Tingkat</h5>
+                  <div class="mb-2">
+                    <span class="badge bg-info text-dark">UKT</span>
+                    <span class="badge bg-success">Completed</span>
+                  </div>
+                  <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod metus eu enim facilisis.</p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted"><i class="fas fa-calendar-alt me-1"></i> 20 November 2023</small>
+                    <a href="/events/3" class="btn btn-sm btn-primary">Selengkapnya</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Event 4 -->
+        <div class="col-md-6 mb-4">
+          <div class="card h-100">
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img src="https://via.placeholder.com/300x200" class="img-fluid rounded-start h-100" alt="Event Image" style="object-fit: cover;">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h5 class="card-title">Kegiatan Bakti Sosial</h5>
+                  <div class="mb-2">
+                    <span class="badge bg-danger">Sosial</span>
+                    <span class="badge bg-info text-dark">Ongoing</span>
+                  </div>
+                  <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod metus eu enim facilisis.</p>
+                  <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted"><i class="fas fa-calendar-alt me-1"></i> 5 Desember 2023</small>
+                    <a href="/events/4" class="btn btn-sm btn-primary">Selengkapnya</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination -->
+      <nav aria-label="Event pagination" class="mt-4">
+        <ul class="pagination justify-content-center">
+          <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+          </li>
+          <li class="page-item active"><a class="page-link" href="#">1</a></li>
+          <li class="page-item"><a class="page-link" href="#">2</a></li>
+          <li class="page-item"><a class="page-link" href="#">3</a></li>
+          <li class="page-item">
+            <a class="page-link" href="#">Next</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </section>
+</main>
+
+<%- include('../partials/footer') %> 

@@ -1,0 +1,171 @@
+<%- include('../partials/admin-header') %>
+
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">Pesan Kontak</h1>
+  </div>
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold">Semua Pesan</h6>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover" id="contactTable">
+          <thead>
+            <tr>
+              <th width="20%">Nama</th>
+              <th width="20%">Email</th>
+              <th width="20%">Subjek</th>
+              <th width="15%">Tanggal</th>
+              <th width="10%">Status</th>
+              <th width="15%">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (contacts && contacts.length > 0) { %>
+              <% contacts.forEach(contact => { %>
+                <tr class="<%= contact.status === 'unread' ? 'table-light font-weight-bold' : '' %>">
+                  <td><%= contact.name %></td>
+                  <td><%= contact.email %></td>
+                  <td><%= contact.subject %></td>
+                  <td><%= new Date(contact.createdAt).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) %></td>
+                  <td>
+                    <% if (contact.status === 'unread') { %>
+                      <span class="badge bg-danger">Belum Dibaca</span>
+                    <% } else if (contact.status === 'read') { %>
+                      <span class="badge bg-primary">Dibaca</span>
+                    <% } else if (contact.status === 'replied') { %>
+                      <span class="badge bg-success">Dibalas</span>
+                    <% } else { %>
+                      <span class="badge bg-secondary">Diarsipkan</span>
+                    <% } %>
+                  </td>
+                  <td>
+                    <a href="/admin/contacts/<%= contact.id %>" class="btn btn-sm btn-primary">
+                      <i class="fas fa-eye"></i> Lihat
+                    </a>
+                    <button type="button" class="btn btn-sm btn-danger delete-btn" data-id="<%= contact.id %>">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              <% }) %>
+            <% } else { %>
+              <tr>
+                <td colspan="6" class="text-center">Tidak ada pesan kontak</td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Hapus</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Apakah Anda yakin ingin menghapus pesan ini? Tindakan ini tidak dapat dibatalkan.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+        <button type="button" class="btn btn-danger" id="confirmDelete">Hapus</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DataTables JavaScript -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize DataTable
+    $('#contactTable').DataTable({
+      language: {
+        url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/id.json'
+      },
+      order: [[3, 'desc']] // Sort by date
+    });
+
+    // Delete functionality
+    let contactIdToDelete = null;
+    const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+
+    // Set up delete button listeners
+    document.querySelectorAll('.delete-btn').forEach(button => {
+      button.addEventListener('click', function() {
+        contactIdToDelete = this.getAttribute('data-id');
+        deleteModal.show();
+      });
+    });
+
+    // Confirm delete action
+    document.getElementById('confirmDelete').addEventListener('click', function() {
+      if (!contactIdToDelete) return;
+
+      fetch(`/admin/contacts/${contactIdToDelete}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // Close modal and reload page
+          deleteModal.hide();
+          showToast('success', 'Pesan berhasil dihapus');
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        } else {
+          showToast('error', data.message || 'Gagal menghapus pesan');
+        }
+      })
+      .catch(error => {
+        console.error('Error deleting contact:', error);
+        showToast('error', 'Terjadi kesalahan saat menghapus pesan');
+      });
+    });
+
+    // Simple toast notification function
+    function showToast(type, message) {
+      const toastContainer = document.createElement('div');
+      toastContainer.className = 'position-fixed bottom-0 end-0 p-3';
+      toastContainer.style.zIndex = '5';
+      
+      const toastElement = document.createElement('div');
+      toastElement.className = `toast align-items-center text-white bg-${type === 'success' ? 'success' : 'danger'}`;
+      toastElement.setAttribute('role', 'alert');
+      toastElement.setAttribute('aria-live', 'assertive');
+      toastElement.setAttribute('aria-atomic', 'true');
+      
+      toastElement.innerHTML = `
+        <div class="d-flex">
+          <div class="toast-body">
+            ${message}
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      `;
+      
+      toastContainer.appendChild(toastElement);
+      document.body.appendChild(toastContainer);
+      
+      const toast = new bootstrap.Toast(toastElement, { delay: 3000 });
+      toast.show();
+      
+      toastElement.addEventListener('hidden.bs.toast', function() {
+        document.body.removeChild(toastContainer);
+      });
+    }
+  });
+</script>
+
+<%- include('../partials/admin-footer') %> 

@@ -1,0 +1,21 @@
+<%- include('header', { title: title, active: active || '' }) %>
+
+<main class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 text-center">
+      <div class="error-page my-5">
+        <h1 class="display-1 fw-bold text-danger"><%= statusCode %></h1>
+        <h2 class="mb-4"><%= title %></h2>
+        <p class="lead mb-4"><%= message %></p>
+        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mt-4">
+          <a href="/" class="btn btn-primary btn-lg px-4 gap-3">Kembali ke Beranda</a>
+          <% if (statusCode === 404) { %>
+            <a href="javascript:history.back()" class="btn btn-outline-secondary btn-lg px-4">Kembali ke Halaman Sebelumnya</a>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<%- include('footer') %> 

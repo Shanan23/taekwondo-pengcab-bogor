@@ -1,0 +1,186 @@
+<%- include('../partials/admin-header') %>
+
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0 text-gray-800"><%= member ? 'Edit' : 'Create' %> Member</h1>
+    <a href="/admin/members" class="btn btn-secondary">
+      <i class="fas fa-arrow-left"></i> Back to Members
+    </a>
+  </div>
+
+  <% if(messages.error) { %>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <%= messages.error %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% } %>
+
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary"><%= member ? 'Edit' : 'Create' %> Member</h6>
+    </div>
+    <div class="card-body">
+      <form action="<%= member ? `/admin/members/edit/${member.id}` : '/admin/members/create' %>" method="POST" enctype="multipart/form-data">
+        <div class="row">
+          <!-- Basic Information -->
+          <div class="col-md-6">
+            <h5 class="mb-3">Basic Information</h5>
+            
+            <div class="mb-3">
+              <label for="name" class="form-label">Full Name *</label>
+              <input type="text" class="form-control" id="name" name="name" value="<%= member ? member.name : '' %>" required>
+            </div>
+            
+            <div class="mb-3">
+              <label for="gender" class="form-label">Gender *</label>
+              <select class="form-select" id="gender" name="gender" required>
+                <option value="" disabled <%= !member ? 'selected' : '' %>>Select Gender</option>
+                <option value="male" <%= member && member.gender === 'male' ? 'selected' : '' %>>Male</option>
+                <option value="female" <%= member && member.gender === 'female' ? 'selected' : '' %>>Female</option>
+              </select>
+            </div>
+            
+            <div class="mb-3">
+              <label for="dateOfBirth" class="form-label">Date of Birth *</label>
+              <input type="date" class="form-control" id="dateOfBirth" name="dateOfBirth" value="<%= member ? member.dateOfBirth : '' %>" required>
+            </div>
+            
+            <div class="mb-3">
+              <label for="address" class="form-label">Address</label>
+              <textarea class="form-control" id="address" name="address" rows="3"><%= member ? member.address : '' %></textarea>
+            </div>
+          </div>
+          
+          <!-- Contact Information -->
+          <div class="col-md-6">
+            <h5 class="mb-3">Contact Information</h5>
+            
+            <div class="mb-3">
+              <label for="phone" class="form-label">Phone Number</label>
+              <input type="tel" class="form-control" id="phone" name="phone" value="<%= member ? member.phone : '' %>">
+            </div>
+            
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email" name="email" value="<%= member ? member.email : '' %>">
+            </div>
+            
+            <div class="mb-3">
+              <label for="photo" class="form-label">Photo</label>
+              <input type="file" class="form-control" id="photo" name="photo" accept="image/*">
+              <% if (member && member.photo) { %>
+                <div class="mt-2">
+                  <p class="mb-1">Current Photo:</p>
+                  <img src="<%= member.photo %>" alt="Member Photo" class="img-thumbnail" style="max-height: 100px;">
+                </div>
+              <% } %>
+            </div>
+            
+            <div class="mb-3">
+              <label for="unitId" class="form-label">Training Unit *</label>
+              <select class="form-select" id="unitId" name="unitId" required>
+                <option value="" disabled <%= !member ? 'selected' : '' %>>Select Unit</option>
+                <% if (units && units.length > 0) { %>
+                  <% units.forEach(unit => { %>
+                    <option value="<%= unit.id %>" <%= member && member.unitId === unit.id ? 'selected' : '' %>>
+                      <%= unit.name %>
+                    </option>
+                  <% }); %>
+                <% } %>
+              </select>
+            </div>
+          </div>
+          
+          <!-- Taekwondo Information -->
+          <div class="col-md-12 mt-4">
+            <h5 class="mb-3">Taekwondo Information</h5>
+            
+            <div class="row">
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label for="beltRank" class="form-label">Belt Rank *</label>
+                  <select class="form-select" id="beltRank" name="beltRank" required>
+                    <option value="" disabled <%= !member ? 'selected' : '' %>>Select Belt Rank</option>
+                    <option value="white" <%= member && member.beltRank === 'white' ? 'selected' : '' %>>White</option>
+                    <option value="yellow" <%= member && member.beltRank === 'yellow' ? 'selected' : '' %>>Yellow</option>
+                    <option value="green" <%= member && member.beltRank === 'green' ? 'selected' : '' %>>Green</option>
+                    <option value="blue" <%= member && member.beltRank === 'blue' ? 'selected' : '' %>>Blue</option>
+                    <option value="red" <%= member && member.beltRank === 'red' ? 'selected' : '' %>>Red</option>
+                    <option value="black" <%= member && member.beltRank === 'black' ? 'selected' : '' %>>Black</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label for="danLevel" class="form-label">Dan Level (for Black Belt)</label>
+                  <select class="form-select" id="danLevel" name="danLevel" <%= member && member.beltRank !== 'black' ? 'disabled' : '' %>>
+                    <option value="">N/A</option>
+                    <% for (let i = 1; i <= 10; i++) { %>
+                      <option value="<%= i %>" <%= member && member.danLevel === i ? 'selected' : '' %>>Dan <%= i %></option>
+                    <% } %>
+                  </select>
+                </div>
+              </div>
+              
+              <div class="col-md-4">
+                <div class="mb-3">
+                  <label for="joinDate" class="form-label">Join Date *</label>
+                  <input type="date" class="form-control" id="joinDate" name="joinDate" value="<%= member ? member.joinDate : new Date().toISOString().split('T')[0] %>" required>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label for="notes" class="form-label">Notes</label>
+              <textarea class="form-control" id="notes" name="notes" rows="3"><%= member ? member.notes : '' %></textarea>
+            </div>
+            
+            <% if (member) { %>
+              <div class="mb-3">
+                <label for="active" class="form-label">Status</label>
+                <select class="form-select" id="active" name="active">
+                  <option value="true" <%= member.active ? 'selected' : '' %>>Active</option>
+                  <option value="false" <%= !member.active ? 'selected' : '' %>>Inactive</option>
+                </select>
+              </div>
+            <% } %>
+          </div>
+          
+          <div class="col-12 mt-4">
+            <div class="d-flex justify-content-between">
+              <a href="/admin/members" class="btn btn-secondary">Cancel</a>
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save me-1"></i> <%= member ? 'Update' : 'Create' %> Member
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Handle black belt dan level selection
+    const beltRankSelect = document.getElementById('beltRank');
+    const danLevelSelect = document.getElementById('danLevel');
+    
+    beltRankSelect.addEventListener('change', function() {
+      if (this.value === 'black') {
+        danLevelSelect.disabled = false;
+      } else {
+        danLevelSelect.disabled = true;
+        danLevelSelect.value = '';
+      }
+    });
+    
+    // Set current date as default for joinDate if creating new member
+    <% if (!member) { %>
+      document.getElementById('joinDate').valueAsDate = new Date();
+    <% } %>
+  });
+</script>
+
+<%- include('../partials/admin-footer') %> 
