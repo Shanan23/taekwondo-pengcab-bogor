@@ -7,13 +7,45 @@ const Organization = sequelize.define('Organization', {
     primaryKey: true,
     autoIncrement: true
   },
-  content: {
-    type: DataTypes.TEXT,
+  name: {
+    type: DataTypes.STRING,
     allowNull: false
   },
-  image: {
-    type: DataTypes.BLOB,
+  position: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  department: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  photo: {
+    type: DataTypes.STRING,
     allowNull: true
+  },
+  bio: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  email: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  phone: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  socialMedia: {
+    type: DataTypes.JSON,
+    allowNull: true
+  },
+  order: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0
+  },
+  active: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
   }
 }, {
   timestamps: true
