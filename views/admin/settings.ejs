@@ -1,116 +1,114 @@
 <%- include('../partials/header') %>
 
-<div class="content-wrapper">
-    <div class="container-fluid">
-        <div class="row">
-            <%- include('../partials/sidebar') %>
+<div class="container-fluid">
+    <div class="row">
+        <%- include('../partials/sidebar') %>
 
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Settings</h1>
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">Settings</h1>
+            </div>
+
+            <% if (messages.error && messages.error.length) { %>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <%= messages.error %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
+            <% } else if (messages.success && messages.success.length) { %>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <%= messages.success %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <% } %>
 
-                <% if (messages.error && messages.error.length) { %>
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <%= messages.error %>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                <% } else if (messages.success && messages.success.length) { %>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <%= messages.success %>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                <% } %>
-
-                <div class="row">
-                    <!-- General Settings -->
-                    <div class="col-md-6 mb-4">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">General Settings</h5>
-                            </div>
-                            <div class="card-body">
-                                <form action="/admin/settings/general" method="POST">
-                                    <div class="mb-3">
-                                        <label for="siteName" class="form-label">Site Name</label>
-                                        <input type="text" class="form-control" id="siteName" name="siteName" value="<%= settings?.siteName || '' %>" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="siteDescription" class="form-label">Site Description</label>
-                                        <textarea class="form-control" id="siteDescription" name="siteDescription" rows="3"><%= settings?.siteDescription || '' %></textarea>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="contactEmail" class="form-label">Contact Email</label>
-                                        <input type="email" class="form-control" id="contactEmail" name="contactEmail" value="<%= settings?.contactEmail || '' %>">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="contactPhone" class="form-label">Contact Phone</label>
-                                        <input type="tel" class="form-control" id="contactPhone" name="contactPhone" value="<%= settings?.contactPhone || '' %>">
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Save General Settings</button>
-                                </form>
-                            </div>
+            <div class="row">
+                <!-- General Settings -->
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">General Settings</h5>
                         </div>
-                    </div>
-
-                    <!-- Social Media Settings -->
-                    <div class="col-md-6 mb-4">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">Social Media Settings</h5>
-                            </div>
-                            <div class="card-body">
-                                <form action="/admin/settings/social" method="POST">
-                                    <div class="mb-3">
-                                        <label for="facebook" class="form-label">Facebook URL</label>
-                                        <input type="url" class="form-control" id="facebook" name="facebook" value="<%= settings?.socialMedia?.facebook || '' %>">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="instagram" class="form-label">Instagram URL</label>
-                                        <input type="url" class="form-control" id="instagram" name="instagram" value="<%= settings?.socialMedia?.instagram || '' %>">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="twitter" class="form-label">Twitter URL</label>
-                                        <input type="url" class="form-control" id="twitter" name="twitter" value="<%= settings?.socialMedia?.twitter || '' %>">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="youtube" class="form-label">YouTube URL</label>
-                                        <input type="url" class="form-control" id="youtube" name="youtube" value="<%= settings?.socialMedia?.youtube || '' %>">
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Save Social Media Settings</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Change Password -->
-                    <div class="col-md-6 mb-4">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">Change Password</h5>
-                            </div>
-                            <div class="card-body">
-                                <form action="/admin/settings/password" method="POST">
-                                    <div class="mb-3">
-                                        <label for="currentPassword" class="form-label">Current Password</label>
-                                        <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="newPassword" class="form-label">New Password</label>
-                                        <input type="password" class="form-control" id="newPassword" name="newPassword" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="confirmPassword" class="form-label">Confirm New Password</label>
-                                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Change Password</button>
-                                </form>
-                            </div>
+                        <div class="card-body">
+                            <form action="/admin/settings/general" method="POST">
+                                <div class="mb-3">
+                                    <label for="siteName" class="form-label">Site Name</label>
+                                    <input type="text" class="form-control" id="siteName" name="siteName" value="<%= settings?.siteName || '' %>" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="siteDescription" class="form-label">Site Description</label>
+                                    <textarea class="form-control" id="siteDescription" name="siteDescription" rows="3"><%= settings?.siteDescription || '' %></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="contactEmail" class="form-label">Contact Email</label>
+                                    <input type="email" class="form-control" id="contactEmail" name="contactEmail" value="<%= settings?.contactEmail || '' %>">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="contactPhone" class="form-label">Contact Phone</label>
+                                    <input type="tel" class="form-control" id="contactPhone" name="contactPhone" value="<%= settings?.contactPhone || '' %>">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Save General Settings</button>
+                            </form>
                         </div>
                     </div>
                 </div>
-            </main>
-        </div>
+
+                <!-- Social Media Settings -->
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Social Media Settings</h5>
+                        </div>
+                        <div class="card-body">
+                            <form action="/admin/settings/social" method="POST">
+                                <div class="mb-3">
+                                    <label for="facebook" class="form-label">Facebook URL</label>
+                                    <input type="url" class="form-control" id="facebook" name="facebook" value="<%= settings?.socialMedia?.facebook || '' %>">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="instagram" class="form-label">Instagram URL</label>
+                                    <input type="url" class="form-control" id="instagram" name="instagram" value="<%= settings?.socialMedia?.instagram || '' %>">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="twitter" class="form-label">Twitter URL</label>
+                                    <input type="url" class="form-control" id="twitter" name="twitter" value="<%= settings?.socialMedia?.twitter || '' %>">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="youtube" class="form-label">YouTube URL</label>
+                                    <input type="url" class="form-control" id="youtube" name="youtube" value="<%= settings?.socialMedia?.youtube || '' %>">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Save Social Media Settings</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Change Password -->
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Change Password</h5>
+                        </div>
+                        <div class="card-body">
+                            <form action="/admin/settings/password" method="POST">
+                                <div class="mb-3">
+                                    <label for="currentPassword" class="form-label">Current Password</label>
+                                    <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="newPassword" class="form-label">New Password</label>
+                                    <input type="password" class="form-control" id="newPassword" name="newPassword" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="confirmPassword" class="form-label">Confirm New Password</label>
+                                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Change Password</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 </div>
 
