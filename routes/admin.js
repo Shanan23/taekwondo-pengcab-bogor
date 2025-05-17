@@ -11,6 +11,11 @@ const authController = require('../controllers/authController');
 const unitController = require('../controllers/unitController');
 const memberController = require('../controllers/memberController');
 const contactController = require('../controllers/contactController');
+const aboutController = require('../controllers/aboutController');
+const visionMissionController = require('../controllers/visionMissionController');
+const organizationController = require('../controllers/organizationController');
+const eventController = require('../controllers/eventController');
+const settingsController = require('../controllers/settingsController');
 
 // Authentication routes
 router.get('/login', authController.renderLogin);
@@ -28,53 +33,25 @@ router.get('/', isAuthenticated, (req, res) => {
 });
 
 // About Us Management
-router.get('/about', isAuthenticated, (req, res) => {
-  res.render('admin/about', {
-    title: 'Manage About Us',
-    active: 'about'
-  });
-});
+router.get('/about', isAuthenticated, aboutController.getAbout);
+router.post('/about', isAuthenticated, upload.single('image'), aboutController.updateAbout);
 
 // Vision Mission Management
-router.get('/vision-mission', isAuthenticated, (req, res) => {
-  res.render('admin/vision-mission', {
-    title: 'Manage Vision & Mission',
-    active: 'vision-mission'
-  });
-});
+router.get('/vision-mission', isAuthenticated, visionMissionController.getVisionMission);
+router.post('/vision-mission/vision', isAuthenticated, upload.single('image'), visionMissionController.updateVision);
+router.post('/vision-mission/mission', isAuthenticated, upload.single('image'), visionMissionController.updateMission);
 
 // Organization Structure Management
-router.get('/organization', isAuthenticated, (req, res) => {
-  res.render('admin/organization', {
-    title: 'Manage Organization Structure',
-    active: 'organization'
-  });
-});
+router.get('/organization', isAuthenticated, organizationController.getOrganization);
+router.post('/organization', isAuthenticated, upload.single('image'), organizationController.updateOrganization);
 
 // Events Management
-router.get('/events', isAuthenticated, (req, res) => {
-  res.render('admin/events', {
-    title: 'Manage Events',
-    active: 'events'
-  });
-});
-
-// Create/Edit Event
-router.get('/events/create', isAuthenticated, (req, res) => {
-  res.render('admin/event-form', {
-    title: 'Create Event',
-    active: 'events',
-    event: null
-  });
-});
-
-router.get('/events/edit/:id', isAuthenticated, (req, res) => {
-  res.render('admin/event-form', {
-    title: 'Edit Event',
-    active: 'events',
-    event: {} // Will be populated with actual event data
-  });
-});
+router.get('/events', isAuthenticated, eventController.getAllEvents);
+router.get('/events/create', isAuthenticated, eventController.renderCreateForm);
+router.post('/events/create', isAuthenticated, upload.single('image'), eventController.createEvent);
+router.get('/events/edit/:id', isAuthenticated, eventController.renderEditForm);
+router.post('/events/edit/:id', isAuthenticated, upload.single('image'), eventController.updateEvent);
+router.delete('/events/:id', isAuthenticated, eventController.deleteEvent);
 
 // Units Management
 router.get('/units', isAuthenticated, unitController.getAllUnits);
@@ -101,12 +78,10 @@ router.post('/contacts/:id/status', isAuthenticated, contactController.updateCon
 router.delete('/contacts/:id', isAuthenticated, contactController.deleteContact);
 
 // Settings
-router.get('/settings', isAuthenticated, (req, res) => {
-  res.render('admin/settings', {
-    title: 'Settings',
-    active: 'settings'
-  });
-});
+router.get('/settings', isAuthenticated, settingsController.getSettings);
+router.post('/settings/general', isAuthenticated, settingsController.updateGeneralSettings);
+router.post('/settings/social', isAuthenticated, settingsController.updateSocialSettings);
+router.post('/settings/password', isAuthenticated, settingsController.changePassword);
 
 // Development routes - create initial admin account (remove in production)
 if (process.env.NODE_ENV === 'development') {

@@ -7,49 +7,16 @@ const Organization = sequelize.define('Organization', {
     primaryKey: true,
     autoIncrement: true
   },
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  position: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  department: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  photo: {
-    type: DataTypes.STRING,
-    allowNull: true
-  },
-  bio: {
+  content: {
     type: DataTypes.TEXT,
+    allowNull: false
+  },
+  image: {
+    type: DataTypes.BLOB,
     allowNull: true
-  },
-  email: {
-    type: DataTypes.STRING,
-    allowNull: true,
-    validate: {
-      isEmail: true
-    }
-  },
-  phone: {
-    type: DataTypes.STRING,
-    allowNull: true
-  },
-  socialMedia: {
-    type: DataTypes.JSON,
-    allowNull: true
-  },
-  order: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0
-  },
-  active: {
-    type: DataTypes.BOOLEAN,
-    defaultValue: true
   }
+}, {
+  timestamps: true
 });
 
 module.exports = Organization; 

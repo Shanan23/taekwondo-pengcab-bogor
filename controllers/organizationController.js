@@ -263,4 +263,50 @@ exports.updateOrder = async (req, res) => {
       message: 'Error updating order'
     });
   }
-}; 
+};
+
+// Get organization data
+exports.getOrganization = async (req, res) => {
+  try {
+    const organization = await Organization.findOne();
+    
+    res.render('admin/organization', {
+      title: 'Manage Organization Structure',
+      active: 'organization',
+      organization: organization
+    });
+  } catch (error) {
+    req.flash('error', 'Error fetching organization data');
+    res.redirect('/admin');
+  }
+};
+
+// Update organization
+exports.updateOrganization = async (req, res) => {
+  try {
+    const { content } = req.body;
+    let organization = await Organization.findOne();
+
+    if (organization) {
+      organization.content = content;
+      if (req.file) {
+        organization.image = req.file.buffer;
+      }
+      await organization.save();
+    } else {
+      organization = new Organization({
+        content,
+        image: req.file ? req.file.buffer : null
+      });
+      await organization.save();
+    }
+
+    req.flash('success', 'Organization structure updated successfully');
+    res.redirect('/admin/organization');
+  } catch (error) {
+    req.flash('error', 'Error updating organization structure');
+    res.redirect('/admin/organization');
+  }
+};
+
+module.exports = exports; 

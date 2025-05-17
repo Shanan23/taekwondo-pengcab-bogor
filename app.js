@@ -92,6 +92,15 @@ db.sequelize.authenticate()
   .then(() => {
     console.log('Database connection has been established successfully.');
     
+    // Sync database
+    db.sequelize.sync()
+      .then(() => {
+        console.log('Database synced successfully');
+      })
+      .catch((error) => {
+        console.error('Error syncing database:', error);
+      });
+    
     // Start server
     app.listen(PORT, () => {
       console.log(`Server is running on http://localhost:${PORT}`);
