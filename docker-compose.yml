@@ -1,34 +1,39 @@
-version: '3.3'
+version: '3.8'
 
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        - NODE_ENV=production
-    image: taekwondo-app
+    build: .
     container_name: taekwondo-app
+    restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
       - NODE_ENV=production
-      - PORT=3000
       - DB_HOST=host.docker.internal
       - DB_PORT=5432
       - DB_NAME=taekwondo_bogor
-      - DB_USER=casaos
-      - DB_PASS=casaos
-      - DB_SSL=false
-      - SESSION_SECRET=xaM78fkcKGx/MdPkAc97FPXSBLOycwA2qyN8brHXZOc=
-      - JWT_SECRET=vtODH1N7kW2KJOPWSjyuVLyWpKcBrq9f0/XXtOmF0tc=
-    volumes:
-      - ./uploads:/app/uploads
-    restart: unless-stopped
+      - DB_USERNAME=casaos
+      - DB_PASSWORD=casaos
+      - SESSION_SECRET=your-secret-key
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    volumes:
+      - ./uploads:/app/uploads
+      - ./src/db/migrations:/app/src/db/migrations
+      - ./src/db/seeders:/app/src/db/seeders
 
-# No postgres service since we're using an existing one
+  db:
+    image: postgres:14-alpine
+    container_name: taekwondo-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=taekwondo_bogor
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
 
 volumes:
-  uploads: 
+  postgres_data: 

@@ -1,29 +1,37 @@
-const { Sequelize } = require('sequelize');
+require('dotenv').config();
 
-const sequelize = new Sequelize({
-    dialect: 'postgres',
+module.exports = {
+  development: {
+    username: process.env.DB_USERNAME || 'casaos',
+    password: process.env.DB_PASSWORD || 'casaos',
+    database: process.env.DB_NAME || 'taekwondo_bogor',
     host: process.env.DB_HOST || 'host.docker.internal',
     port: process.env.DB_PORT || 5432,
+    dialect: 'postgres',
+    logging: false
+  },
+  test: {
+    username: process.env.DB_USERNAME || 'casaos',
+    password: process.env.DB_PASSWORD || 'casaos',
     database: process.env.DB_NAME || 'taekwondo_bogor',
-    username: process.env.DB_USER || 'casaos',
-    password: process.env.DB_PASS || 'casaos',
-    ssl: process.env.DB_SSL === 'true',
-    logging: process.env.NODE_ENV === 'development' ? console.log : false,
+    host: process.env.DB_HOST || 'host.docker.internal',
+    port: process.env.DB_PORT || 5432,
+    dialect: 'postgres',
+    logging: false
+  },
+  production: {
+    username: process.env.DB_USERNAME || 'casaos',
+    password: process.env.DB_PASSWORD || 'casaos',
+    database: process.env.DB_NAME || 'taekwondo_bogor',
+    host: process.env.DB_HOST || 'host.docker.internal',
+    port: process.env.DB_PORT || 5432,
+    dialect: 'postgres',
+    logging: false,
     pool: {
-        max: 5,
-        min: 0,
-        acquire: 30000,
-        idle: 10000
+      max: 5,
+      min: 0,
+      acquire: 30000,
+      idle: 10000
     }
-});
-
-// Test the connection
-sequelize.authenticate()
-    .then(() => {
-        console.log('Database connection has been established successfully.');
-    })
-    .catch(err => {
-        console.error('Unable to connect to the database:', err);
-    });
-
-module.exports = sequelize;
+  }
+};

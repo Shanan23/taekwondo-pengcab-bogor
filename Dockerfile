@@ -1,40 +1,27 @@
 FROM node:18-alpine
 
-# Build arguments
-ARG NODE_ENV=production
-ARG APP_VERSION=1.0.1
-
-# Add metadata
-LABEL version=$APP_VERSION
-LABEL description="Taekwondo Pengcab Bogor Application"
-
-# Install PostgreSQL client for pg_isready
+# Install PostgreSQL client for health checks
 RUN apk add --no-cache postgresql-client
 
+# Create app directory
 WORKDIR /app
 
-# Copy package files first for better caching
+# Install app dependencies
 COPY package*.json ./
+RUN npm install
 
-# Install dependencies
-RUN npm ci --only=production
-
-# Copy the entry point script
-COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
-
-# Copy source code
+# Copy app source
 COPY . .
 
-# Create uploads directories for file uploads
-RUN mkdir -p uploads/members uploads/units
+# Create necessary directories
+RUN mkdir -p src/db/migrations src/db/seeders
 
 # Set environment variables
-ENV NODE_ENV=$NODE_ENV
-ENV APP_VERSION=$APP_VERSION
+ENV NODE_ENV=production
+ENV PORT=3000
 
 # Expose port
 EXPOSE 3000
 
-ENTRYPOINT ["docker-entrypoint.sh"]
-CMD ["node", "app.js"] 
+# Start the application
+CMD ["npm", "start"] 
