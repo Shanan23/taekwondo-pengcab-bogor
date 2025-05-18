@@ -5,16 +5,16 @@ const fs = require('fs');
 // Create upload directories if they don't exist
 const createUploadDirs = () => {
   const dirs = [
-    'uploads/organization',
-    'uploads/events',
-    'uploads/members',
-    'uploads/content'
+    'organization',
+    'events',
+    'members',
+    'content'
   ];
   
   dirs.forEach(dir => {
-    const fullPath = path.join(__dirname, '..', dir);
+    const fullPath = path.join('/app', 'uploads', dir);
     if (!fs.existsSync(fullPath)) {
-      fs.mkdirSync(fullPath, { recursive: true });
+      fs.mkdirSync(fullPath, { recursive: true, mode: 0o755 });
     }
   });
 };
@@ -24,17 +24,17 @@ createUploadDirs();
 // Configure storage
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    let uploadPath = 'uploads/';
+    let uploadPath = '/app/uploads';
     
     // Determine upload directory based on route
     if (req.originalUrl.includes('/organization')) {
-      uploadPath += 'organization';
+      uploadPath = path.join(uploadPath, 'organization');
     } else if (req.originalUrl.includes('/events')) {
-      uploadPath += 'events';
+      uploadPath = path.join(uploadPath, 'events');
     } else if (req.originalUrl.includes('/members')) {
-      uploadPath += 'members';
+      uploadPath = path.join(uploadPath, 'members');
     } else if (req.originalUrl.includes('/content')) {
-      uploadPath += 'content';
+      uploadPath = path.join(uploadPath, 'content');
     }
     
     cb(null, uploadPath);

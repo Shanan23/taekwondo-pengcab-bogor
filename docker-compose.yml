@@ -17,12 +17,17 @@ services:
       - SESSION_SECRET=xaM78fkcKGx/MdPkAc97FPXSBLOycwA2qyN8brHXZOc=
       - JWT_SECRET=vtODH1N7kW2KJOPWSjyuVLyWpKcBrq9f0/XXtOmF0tc=
       - JWT_EXPIRY=24h
-
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
-      - ./uploads:/app/uploads
+      - ./uploads:/app/uploads:rw
       - ./src/db/migrations:/app/src/db/migrations
       - ./src/db/seeders:/app/src/db/seeders
+    user: "node"
+    command: >
+      sh -c "mkdir -p /app/uploads/{organization,events,members,content} &&
+             chmod -R 755 /app/uploads &&
+             node src/app.js"
+
 volumes:
   postgres_data: 
