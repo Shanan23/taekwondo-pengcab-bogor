@@ -5,6 +5,7 @@ const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const flash = require('express-flash');
 const session = require('express-session');
+const pgSession = require('connect-pg-simple')(session);
 const viewLocals = require('./middlewares/viewLocals');
 const { Sequelize } = require('sequelize');
 const Umzug = require('umzug');
@@ -31,10 +32,18 @@ app.use(cookieParser());
 
 // Session setup
 app.use(session({
+  store: new pgSession({
+    pool: db.sequelize.connectionManager.pool,
+    tableName: 'session'
+  }),
   secret: process.env.SESSION_SECRET || 'taekwondo-pengcab-bogor-secret',
   resave: false,
   saveUninitialized: false,
-  cookie: { maxAge: 24 * 60 * 60 * 1000 } // 24 hours
+  cookie: { 
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true
+  }
 }));
 
 // Flash messages
