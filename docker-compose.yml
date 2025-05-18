@@ -20,12 +20,12 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
-      - ./uploads:/app/uploads:rw
+      - ./uploads:/app/uploads
       - ./src/db/migrations:/app/src/db/migrations
       - ./src/db/seeders:/app/src/db/seeders
-    user: "node"
     command: >
       sh -c "mkdir -p /app/uploads/{organization,events,members,content} &&
+             chown -R node:node /app/uploads &&
              chmod -R 755 /app/uploads &&
              node src/app.js"
 
