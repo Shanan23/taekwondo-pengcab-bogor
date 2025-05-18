@@ -1,18 +1,16 @@
-version: '3.8'
+version: '3.3'
 
 services:
   app:
     build: .
-    container_name: taekwondo-app
-    restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
       - DB_HOST=host.docker.internal
-      - DB_USERNAME=postgres
-      - DB_PASSWORD=postgres
-      - DB_NAME=taekwondo_pengcab_bogor
+      - DB_USERNAME=casaos
+      - DB_PASSWORD=casaos
+      - DB_NAME=taekwondo_bogor
       - DB_PORT=5432
     volumes:
       - ./src:/app/src
@@ -22,9 +20,6 @@ services:
     networks:
       - app-network
 
-volumes:
-  postgres_data:
-
 networks:
   app-network:
-    driver: bridge 
+    driver: bridge
