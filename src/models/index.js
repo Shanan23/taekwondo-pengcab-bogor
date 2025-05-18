@@ -1,24 +1,23 @@
+const fs = require('fs');
+const path = require('path');
 const sequelize = require('../config/database');
 
-// Import models
-const Admin = require('./Admin');
-const Content = require('./Content');
-const Organization = require('./Organization');
-const Event = require('./Event');
-const Unit = require('./Unit');
-const Member = require('./Member');
-const Contact = require('./Contact');
+const models = {};
 
-// Initialize models
-const models = {
-  Admin,
-  Content,
-  Organization,
-  Event,
-  Unit,
-  Member,
-  Contact
-};
+// Read all model files
+fs.readdirSync(__dirname)
+  .filter(file => {
+    return (
+      file.indexOf('.') !== 0 &&
+      file !== 'index.js' &&
+      file.slice(-3) === '.js'
+    );
+  })
+  .forEach(file => {
+    const modelDefiner = require(path.join(__dirname, file));
+    const model = modelDefiner(sequelize);
+    models[model.name] = model;
+  });
 
 // Define model associations
 Object.keys(models).forEach(modelName => {
@@ -27,7 +26,7 @@ Object.keys(models).forEach(modelName => {
   }
 });
 
-// Export models
+// Export models and sequelize instance
 module.exports = {
   sequelize,
   ...models
