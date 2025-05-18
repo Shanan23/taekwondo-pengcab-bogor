@@ -1,8 +1,21 @@
 const fs = require('fs');
 const path = require('path');
-const sequelize = require('../config/database');
+const Sequelize = require('sequelize');
+const config = require('../config/database');
 
-const models = {};
+const sequelize = new Sequelize(
+  config.database,
+  config.username,
+  config.password,
+  {
+    host: config.host,
+    port: config.port,
+    dialect: config.dialect,
+    logging: false
+  }
+);
+
+const db = {};
 
 // Read all model files
 fs.readdirSync(__dirname)
@@ -14,20 +27,18 @@ fs.readdirSync(__dirname)
     );
   })
   .forEach(file => {
-    const modelDefiner = require(path.join(__dirname, file));
-    const model = modelDefiner(sequelize);
-    models[model.name] = model;
+    const model = require(path.join(__dirname, file))(sequelize);
+    db[model.name] = model;
   });
 
-// Define model associations
-Object.keys(models).forEach(modelName => {
-  if (models[modelName].associate) {
-    models[modelName].associate(models);
+// Call associate method if it exists
+Object.keys(db).forEach(modelName => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
   }
 });
 
-// Export models and sequelize instance
-module.exports = {
-  sequelize,
-  ...models
-}; 
+db.sequelize = sequelize;
+db.Sequelize = Sequelize;
+
+module.exports = db; 
