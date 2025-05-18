@@ -14,7 +14,7 @@
     "docker:down": "docker-compose down",
     "docker:logs": "docker-compose logs -f",
     "docker:restart": "docker-compose restart",
-    "docker:rebuild": "docker-compose down && docker-compose build && docker-compose up -d",
+    "docker:rebuild": "git pull && npm install && docker-compose down && docker-compose build && docker-compose up -d",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
