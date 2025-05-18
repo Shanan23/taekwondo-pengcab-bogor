@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 
-module.exports = (sequelize) => {
+module.exports = (sequelize, DataTypes) => {
     const About = sequelize.define('About', {
         id: {
             type: DataTypes.INTEGER,
@@ -16,10 +16,16 @@ module.exports = (sequelize) => {
             allowNull: false
         },
         image: {
-            type: DataTypes.BLOB,
+            type: DataTypes.STRING,
             allowNull: true
+        },
+        order: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0
         }
     }, {
+        tableName: 'Abouts',
         timestamps: true
     });
 

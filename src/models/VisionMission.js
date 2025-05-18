@@ -1,31 +1,36 @@
 const { DataTypes } = require('sequelize');
 
-module.exports = (sequelize) => {
+module.exports = (sequelize, DataTypes) => {
     const VisionMission = sequelize.define('VisionMission', {
-        id: {
-            type: DataTypes.INTEGER,
-            primaryKey: true,
-            autoIncrement: true
-        },
-        type: {
-            type: DataTypes.ENUM('vision', 'mission'),
+        title: {
+            type: DataTypes.STRING,
             allowNull: false
         },
         content: {
             type: DataTypes.TEXT,
             allowNull: false
         },
+        type: {
+            type: DataTypes.ENUM('vision', 'mission'),
+            allowNull: false
+        },
         image: {
-            type: DataTypes.BLOB,
+            type: DataTypes.STRING,
             allowNull: true
+        },
+        order: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0
         }
     }, {
+        tableName: 'VisionMissions',
         timestamps: true
     });
 
     // Define associations
     VisionMission.associate = function(models) {
-        // Add any associations here
+        // Add associations if needed
     };
 
     return VisionMission;

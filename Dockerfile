@@ -16,6 +16,11 @@ COPY . .
 # Create necessary directories
 RUN mkdir -p src/db/migrations src/db/seeders
 
+# Create uploads directory and set permissions
+RUN mkdir -p /app/uploads && chown -R node:node /app/uploads
+
+USER node
+
 # Set environment variables
 ENV NODE_ENV=production
 ENV PORT=3000
@@ -24,4 +29,4 @@ ENV PORT=3000
 EXPOSE 3000
 
 # Start the application
-CMD ["npm", "start"] 
+CMD ["node", "src/app.js"] 

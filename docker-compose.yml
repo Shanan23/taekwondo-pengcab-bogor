@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3.8'
 
 services:
   app:
@@ -8,18 +8,23 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
       - DB_HOST=host.docker.internal
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=taekwondo_pengcab_bogor
       - DB_PORT=5432
-      - DB_NAME=taekwondo_bogor
-      - DB_USERNAME=casaos
-      - DB_PASSWORD=casaos
-      - SESSION_SECRET=your-secret-key
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     volumes:
+      - ./src:/app/src
       - ./uploads:/app/uploads
-      - ./src/db/migrations:/app/src/db/migrations
-      - ./src/db/seeders:/app/src/db/seeders
+    depends_on:
+      - db
+    networks:
+      - app-network
+
 volumes:
-  postgres_data: 
+  postgres_data:
+
+networks:
+  app-network:
+    driver: bridge 
