@@ -18,12 +18,8 @@ RUN mkdir -p src/db/migrations src/db/seeders
 
 # Create uploads directory and set permissions
 RUN mkdir -p /app/uploads && \
-    mkdir -p /app/uploads/organization && \
-    mkdir -p /app/uploads/events && \
-    mkdir -p /app/uploads/members && \
-    mkdir -p /app/uploads/content && \
-    chown -R node:node /app/uploads && \
-    chmod -R 755 /app/uploads
+    chown -R node:node /app && \
+    chmod -R 755 /app
 
 # Switch to non-root user
 USER node
