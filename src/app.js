@@ -8,7 +8,7 @@ const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
 const viewLocals = require('./middlewares/viewLocals');
 const { Sequelize } = require('sequelize');
-const Umzug = require('umzug');
+const { Umzug, SequelizeStorage } = require('umzug');
 
 // Load environment variables
 dotenv.config();
@@ -102,14 +102,22 @@ const initializeDatabase = async () => {
     // Run migrations
     const umzug = new Umzug({
       migrations: {
-        path: path.join(__dirname, 'db/migrations'),
-        pattern: /\.js$/,
-        params: [db.sequelize.getQueryInterface(), Sequelize]
+        glob: path.join(__dirname, 'db/migrations/*.js'),
+        resolve: ({ name, path, context }) => {
+          const migration = require(path);
+          return {
+            name,
+            up: async () => migration.up(context.queryInterface, context.sequelize),
+            down: async () => migration.down(context.queryInterface, context.sequelize)
+          };
+        }
       },
-      storage: 'sequelize',
-      storageOptions: {
+      context: {
+        queryInterface: db.sequelize.getQueryInterface(),
         sequelize: db.sequelize
-      }
+      },
+      storage: new SequelizeStorage({ sequelize: db.sequelize }),
+      logger: console
     });
 
     await umzug.up();
