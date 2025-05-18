@@ -84,6 +84,10 @@ module.exports = (sequelize) => {
       type: DataTypes.BOOLEAN,
       defaultValue: true
     },
+    isFeatured: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
     unitId: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -111,6 +115,9 @@ module.exports = (sequelize) => {
       },
       {
         fields: ['unitId']
+      },
+      {
+        fields: ['isFeatured']
       }
     ]
   });

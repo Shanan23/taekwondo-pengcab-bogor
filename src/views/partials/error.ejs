@@ -1,4 +1,4 @@
-<%- include('header', { title: title, active: active || '' }) %>
+<%- include('header', { title: title, active: typeof active !== 'undefined' ? active : '' }) %>
 
 <main class="container py-5">
   <div class="row justify-content-center">
