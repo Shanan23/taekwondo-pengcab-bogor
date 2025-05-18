@@ -3,23 +3,26 @@ version: '3.3'
 services:
   app:
     build: .
+    container_name: taekwondo-app
+    restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
       - NODE_ENV=production
       - DB_HOST=host.docker.internal
+      - DB_PORT=5432
+      - DB_NAME=taekwondo_bogor
       - DB_USERNAME=casaos
       - DB_PASSWORD=casaos
-      - DB_NAME=taekwondo_bogor
-      - DB_PORT=5432
-    volumes:
-      - ./src:/app/src
-      - ./uploads:/app/uploads
-    depends_on:
-      - db
-    networks:
-      - app-network
+      - SESSION_SECRET=xaM78fkcKGx/MdPkAc97FPXSBLOycwA2qyN8brHXZOc=
+      - JWT_SECRET=vtODH1N7kW2KJOPWSjyuVLyWpKcBrq9f0/XXtOmF0tc=
+      - JWT_EXPIRY=24h
 
-networks:
-  app-network:
-    driver: bridge
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./uploads:/app/uploads
+      - ./src/db/migrations:/app/src/db/migrations
+      - ./src/db/seeders:/app/src/db/seeders
+volumes:
+  postgres_data: 
