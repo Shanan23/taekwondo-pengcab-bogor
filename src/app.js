@@ -6,6 +6,8 @@ const cookieParser = require('cookie-parser');
 const flash = require('express-flash');
 const session = require('express-session');
 const viewLocals = require('./middlewares/viewLocals');
+const { Sequelize } = require('sequelize');
+const Umzug = require('umzug');
 
 // Load environment variables
 dotenv.config();
@@ -88,9 +90,21 @@ const initializeDatabase = async () => {
     await db.sequelize.authenticate();
     console.log('Database connection has been established successfully.');
     
-    // Sync database
-    await db.sequelize.sync();
-    console.log('Database synced successfully');
+    // Run migrations
+    const umzug = new Umzug({
+      migrations: {
+        path: path.join(__dirname, 'db/migrations'),
+        pattern: /\.js$/,
+        params: [db.sequelize.getQueryInterface(), Sequelize]
+      },
+      storage: 'sequelize',
+      storageOptions: {
+        sequelize: db.sequelize
+      }
+    });
+
+    await umzug.up();
+    console.log('Migrations completed successfully');
     return true;
   } catch (error) {
     console.error('Unable to connect to the database:', error);
